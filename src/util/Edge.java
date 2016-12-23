@@ -13,6 +13,13 @@ public final class Edge {
         this.weight = 0.0;
     }
 
+    Edge(Vertex src, Vertex dst, Character color, double weight) {
+        this.color = color;
+        this.source = src;
+        this.destination = dst;
+        this.weight = weight;
+    }
+
     public Character color() {
         return this.color;
     }

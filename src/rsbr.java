@@ -9,13 +9,13 @@ public class rsbr {
 
     public static void main(String[] args) {
 
-        String topologyFile = null;
+        String topologyFile = args[0];
         String volumePath = null;
         boolean shouldMerge = true;
-        int dim = 4;
+        int dim = 5;
         int rows = dim;
         int columns = dim;
-        double[] faultyPercentages = { 0.0, 0.05, 0.1, 0.15, 0.2, 0, 25, 0.30 };
+        double[] faultyPercentages = { 0.0};
 
         if (args.length == 4) {
             rows = Integer.parseInt(args[0]);
@@ -54,6 +54,17 @@ public class rsbr {
             }
 
             ArrayList<ArrayList<Path>> chosenPaths = selectPaths(allMinimalPaths, graph, volumes);
+            List<Path> allPaths = new PathFinder(graph, restrictions).allPathsBetweenVertices(new Vertex("1.0"), new Vertex("3.3"));
+            System.out.println(" - Quantity of paths: " + allPaths.size());
+
+            Map<Path, Double> faultsPerc = new HashMap<>();
+
+            List<Double> latencies = new ArrayList<>();
+            for(Path path : allPaths){
+                double lat = latencyOf(graph,path);
+                latencies.add(lat);
+                System.out.println("Path " + path.size()+ " from " + path.src().name() + " to " + path.dst().name() + " latency: " + lat);
+            }
 
             System.out.println(" - RBR Section");
             RBRSection(shouldMerge, graph, allMinimalPaths, rbr, "full"+"_"+faultyPercentage);
@@ -61,6 +72,19 @@ public class rsbr {
             StatisticalAnalyser statistics = new StatisticalAnalyser(graph, rbr.regions(), volumes);
             printResults(chosenPaths, statistics);
         }
+    }
+
+    public static Double latencyOf(Graph graph, Path path){
+        List<Double> TC_i = new ArrayList<>();
+        TC_i.add(1.0);
+        for(int i = 0; i < path.size()-1; i++) {
+          Edge e = graph.adjunct(path.get(i), path.get(i+1));
+          TC_i.add(1/(1-e.weight()));
+        }
+        TC_i.add(1.0);
+
+        JMMatlab jmMatlab = new JMMatlab();
+        return jmMatlab.latencia(32, TC_i);
     }
 
     private static GraphRestrictions SBRSection(Graph graph) {

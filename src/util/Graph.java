@@ -91,6 +91,10 @@ public class Graph {
         addEdge(new Edge(src, dst, color));
     }
 
+    void addEdge(Vertex src, Vertex dst, Character color, Double weight) {
+        addEdge(new Edge(src, dst, color, weight));
+    }
+
     void addEdge(Edge toAdd) {
         adjuncts.get(toAdd.source()).add(toAdd);
         edges.add(toAdd);
