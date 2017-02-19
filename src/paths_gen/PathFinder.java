@@ -127,7 +127,12 @@ public class PathFinder {
         ArrayList<Path> result = new ArrayList<>();
 
         List<Path> oneHopPaths = computeOneHopPaths(src);
-        result.addAll(oneHopPaths);
+        for (Path path : oneHopPaths) {
+            if (path.dst().equals(dst)) {
+                result.add(path);
+            }
+        }
+
         List<Path> previouslyFoundPaths = oneHopPaths;
         while (!previouslyFoundPaths.isEmpty()) {
             List<Path> valid = advanceOneHopNoMinimal(previouslyFoundPaths);

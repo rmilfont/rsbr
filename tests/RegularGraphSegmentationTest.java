@@ -60,6 +60,12 @@ public class RegularGraphSegmentationTest {
         Assert.assertEquals(2, sr.restrictions().size());
         Assert.assertEquals(1, sr.startVertices().size());
         Assert.assertEquals(0, sr.terminalVertices().size());
+
+        SR sr2 = new SR(noc, new BidimensionalSBRPolicy(noc));
+        sr2.computeSegments();
+        sr2.setrestrictions();
+
+        Assert.assertTrue(sr.restrictions().equals(sr2.restrictions()));
     }
 
     @Test

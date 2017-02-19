@@ -42,4 +42,20 @@ public class GraphRestrictions {
         }
         return restrictions.get(v);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GraphRestrictions that = (GraphRestrictions) o;
+
+        return restrictions != null ? restrictions.equals(that.restrictions) : that.restrictions == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return restrictions != null ? restrictions.hashCode() : 0;
+    }
 }
